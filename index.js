@@ -25,7 +25,7 @@ class LazyRulerNumbers {
     constructor(initialSize=0, force=false, base=2) {
         this.depth = initialSize > 0 ? Math.ceil(Math.log(initialSize)/Math.log(base)) : 2;
         this.base = base;
-        this.generator = this.rationalNumberGenerator(this.#depth)
+        this.generator = this.rationalNumberGenerator(this.depth)
         this.sequence = new Set([0,1]);
 
         if (initialSize && force) {
@@ -55,7 +55,7 @@ class LazyRulerNumbers {
         // For math nerds, this is analogous to computing p-adic rationals given a base - but in the worst way I could come up with that still works.
         // Not to fear, this is just how ruler numbers are generated: https://en.wikipedia.org/wiki/Dyadic_rational.
 
-        // We stop shy from either n^0 = 1, or numerator = denominator as boundary conditions, since 0 and 1 are already added to the set `#sequence` within ColorRuler.
+        // We stop shy from either n^0 = 1, or numerator = denominator as boundary conditions, since 0 and 1 are already added to the set `sequence` within ColorRuler.
         // Additionally, because n is always less than denominator, it will never exceed 1, guaranteeing that the point stays within the interval [0,1].
 
         for (let numerator=1; numerator < this.base**depth; numerator++) {
@@ -79,7 +79,7 @@ class LazyRulerNumbers {
                 this.depth += 1
                 // restart the process
                 // TODO: rewrite for memoization?
-                this.generator = this.rationalNumberGenerator(this.#depth)
+                this.generator = this.rationalNumberGenerator(this.depth)
                 // with the new generator, try to get the next number
                 yield this.number().next().value;
             }

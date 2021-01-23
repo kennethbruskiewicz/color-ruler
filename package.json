@@ -1,0 +1,16 @@
+{
+  "name": "color-ruler",
+  "version": "0.1.0",
+  "license": "MIT",
+  "author": {
+      "name": "Kenneth Bruskiewicz"
+  },
+  "module": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kbruskiewicz/color-ruler.git"
+  },
+  "dependencies": {
+    "d3-interpolate": "^2.0.1"
+  }
+}

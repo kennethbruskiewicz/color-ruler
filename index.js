@@ -21,16 +21,12 @@ const colors = [
 class LazyRulerNumbers {
 
     // private variable declarations
-    #depth  // aka order of magnitude considered for the rationals involved
-    #base
-    #generator
-    #sequence
 
     constructor(initialSize=0, force=false, base=2) {
-        this.#depth = initialSize > 0 ? Math.ceil(Math.log(initialSize)/Math.log(base)) : 2;
-        this.#base = base;
-        this.#generator = this.rationalNumberGenerator(this.#depth)
-        this.#sequence = new Set([0,1]);
+        this.depth = initialSize > 0 ? Math.ceil(Math.log(initialSize)/Math.log(base)) : 2;
+        this.base = base;
+        this.generator = this.rationalNumberGenerator(this.#depth)
+        this.sequence = new Set([0,1]);
 
         if (initialSize && force) {
             // force the populating of the sequence upto the size
@@ -138,26 +134,24 @@ using `d3.interpolateRgbBasisClosed` to normalize them against the interval [0, 
 
 */
 
-export class ColorRuler {
-    #colorMap
-    #numberGenerator
+class ColorRuler {
     constructor(items=[], colorScheme=interpolateRgbBasis(colors)) {
         this.colorScheme = colorScheme;
-        this.#colorMap = new Map();
+        this.colorMap = new Map();
 
         // create a sequence of n=`items.length` amount of rational numbers between 0 and 1
         // the `force` flag (second constructor argument) being true for this instantiation, means that the sequence won't be lazy upto the size of its default items
         // that means we can have n numbers to work with already, rather than having to generate them outside of the object itself
-        this.#numberGenerator = new LazyRulerNumbers(items.length, true);
+        this.numberGenerator = new LazyRulerNumbers(items.length, true);
         if (items.length > 0) {
-            items.forEach((item, index) => this.addColor(item, this.#numberGenerator.sequence[index]));
+            items.forEach((item, index) => this.addColor(item, this.numberGenerator.sequence[index]));
         }
     }
 
     addColor(item, scale) {
         if (scale >= 0 && scale <= 1) {
-            this.#colorMap.set(item, this.colorScheme(scale));
-            return this.#colorMap.get(item);
+            this.colorMap.set(item, this.colorScheme(scale));
+            return this.colorMap.get(item);
         }
     }
 
@@ -165,23 +159,26 @@ export class ColorRuler {
         // guarantee that a color exists for an item
 
         // first check if we have the color
-        const hasColor = this.#colorMap.has(item);
+        const hasColor = this.colorMap.has(item);
 
         // if we don't have the color we need to make it
         if (!hasColor) {
             // we make a color for an item, by assigning it a unique scale value, then adding a color in the usual way (using a color scheme interpolator)
             // we don't have to worry about if the color space is big enough - the number generator takes care of that for us
             // TODO: refactor this call for generator to look make it look more clean?
-            this.#colorMap[item] = this.addColor(item, this.#numberGenerator.number().next().value.value);
+            this.colorMap[item] = this.addColor(item, this.numberGenerator.number().next().value.value);
         }
-        return this.#colorMap.get(item);
+        return this.colorMap.get(item);
     }
 
     colors() {
-        return Object.fromEntries(this.#colorMap.entries());
+        return Object.fromEntries(this.colorMap.entries());
     }
 
 }
 
-export const GLOBAL_COLOR_SCHEME = new ColorRuler();
-export default colors;
+const GLOBAL_COLOR_SCHEME = new ColorRuler();
+module.exports = {
+    ColorRuler,
+    GLOBAL_COLOR_SCHEME,
+}

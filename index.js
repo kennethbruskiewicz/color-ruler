@@ -58,28 +58,28 @@ class LazyRulerNumbers {
         // We stop shy from either n^0 = 1, or numerator = denominator as boundary conditions, since 0 and 1 are already added to the set `#sequence` within ColorRuler.
         // Additionally, because n is always less than denominator, it will never exceed 1, guaranteeing that the point stays within the interval [0,1].
 
-        for (let numerator=1; numerator < this.#base**depth; numerator++) {
-            yield numerator / this.#base**depth
+        for (let numerator=1; numerator < this.base**depth; numerator++) {
+            yield numerator / this.base**depth
         }
 
     }
 
     * number() {
         while(true) {
-            let maybeNextNumber = this.#generator.next();
+            let maybeNextNumber = this.generator.next();
             if (!maybeNextNumber.done) {
-                if (!this.#sequence.has(maybeNextNumber)) {
-                    this.#sequence.add(maybeNextNumber.value)
+                if (!this.sequence.has(maybeNextNumber)) {
+                    this.sequence.add(maybeNextNumber.value)
                     yield maybeNextNumber;
                 }
             } else {
                 // else:
                 // if we've reached our maximum depth and are still looking for more,
                 // increase the resolution of the ruler numbers by increasing our depth
-                this.#depth += 1
+                this.depth += 1
                 // restart the process
                 // TODO: rewrite for memoization?
-                this.#generator = this.rationalNumberGenerator(this.#depth)
+                this.generator = this.rationalNumberGenerator(this.#depth)
                 // with the new generator, try to get the next number
                 yield this.number().next().value;
             }
@@ -87,7 +87,7 @@ class LazyRulerNumbers {
     }
 
     get sequence() {
-        return Array.from(this.#sequence).sort()
+        return Array.from(this.sequence).sort()
     }
 
 }

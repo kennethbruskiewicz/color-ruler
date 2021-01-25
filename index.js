@@ -36,14 +36,6 @@ class LazyRulerNumbers {
 
     }
 
-    get sequence() {
-        return this.sequenceSet;
-    }
-
-    set sequence(newSequenceIteration) {
-        this.sequenceSet = newSequenceIteration;
-    }
-
     * rationalNumberGenerator (depth) {
 
         // Enumerates all of the rationals that exist between 0 and 1, using a given number base and order of magnitude > 1
@@ -75,8 +67,8 @@ class LazyRulerNumbers {
         while(true) {
             let maybeNextNumber = this.generator.next();
             if (!maybeNextNumber.done) {
-                if (!this.sequence.has(maybeNextNumber)) {
-                    this.sequence.add(maybeNextNumber.value)
+                if (!this.sequenceSet.has(maybeNextNumber)) {
+                    this.sequenceSet.add(maybeNextNumber.value)
                     yield maybeNextNumber;
                 }
             } else {
@@ -94,9 +86,8 @@ class LazyRulerNumbers {
     }
 
     get sequence() {
-        return Array.from(this.sequence).sort()
+        return Array.from(this.sequenceSet).sort()
     }
-
 }
 
 /*

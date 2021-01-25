@@ -21,12 +21,11 @@ const colors = [
 class LazyRulerNumbers {
 
     // private variable declarations
-
-    constructor(initialSize=0, force=false, base=2) {
+    constructor(initialSize=0, force=false, base=2, initialSequence=new Set([0,1])) {
         this.depth = initialSize > 0 ? Math.ceil(Math.log(initialSize)/Math.log(base)) : 2;
         this.base = base;
         this.generator = this.rationalNumberGenerator(this.depth)
-        this.sequence = new Set([0,1]);
+        this.sequenceSet = initialSequence;
 
         if (initialSize && force) {
             // force the populating of the sequence upto the size
@@ -35,6 +34,14 @@ class LazyRulerNumbers {
             }
         }
 
+    }
+
+    get sequence() {
+        return this.sequenceSet;
+    }
+
+    set sequence(newSequenceIteration) {
+        this.sequenceSet = newSequenceIteration;
     }
 
     * rationalNumberGenerator (depth) {
@@ -178,7 +185,7 @@ class ColorRuler {
 }
 
 const GLOBAL_COLOR_SCHEME = new ColorRuler();
-module.exports = {
+export {
     ColorRuler,
     GLOBAL_COLOR_SCHEME,
 }
